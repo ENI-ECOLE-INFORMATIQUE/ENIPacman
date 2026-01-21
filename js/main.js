@@ -56,6 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Populate Level Select
+    const levelSelect = document.getElementById('level-select');
+    const customLevels = Storage.getLevels();
+    customLevels.forEach(name => {
+        const option = document.createElement('option');
+        option.value = `local:${name}`;
+        option.innerText = name;
+        levelSelect.appendChild(option);
+    });
+
     startBtn.addEventListener('click', () => {
         const playerName = document.getElementById('player-name').value || "Player";
         // Hide menu
@@ -63,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Start Game
         const game = new Game('game-canvas');
-        game.start('levels/default.json');
+        const levelSource = levelSelect.value;
+        game.start(levelSource);
     });
 });

@@ -10,10 +10,16 @@ class Game {
         this.loop = this.loop.bind(this);
     }
 
-    async start(levelUrl) {
+    async start(levelSource) {
         try {
-            const response = await fetch(levelUrl);
-            this.levelData = await response.json();
+            if (levelSource.startsWith('local:')) {
+                const name = levelSource.replace('local:', '');
+                this.levelData = Storage.getLevel(name);
+                if (!this.levelData) throw new Error("Level not found in storage");
+            } else {
+                const response = await fetch(levelSource);
+                this.levelData = await response.json();
+            }
             
             // Resize canvas to fit level
             this.canvas.width = this.levelData.width * 16;

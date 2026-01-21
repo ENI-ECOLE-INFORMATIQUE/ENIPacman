@@ -22,6 +22,24 @@ const Storage = {
     getHighestScore: () => {
         const scores = JSON.parse(localStorage.getItem('pacman_global_scores')) || [];
         return scores.length > 0 ? scores[0].score : 0;
+    },
+
+    // Level Management
+    saveLevel: (name, data) => {
+        let levels = JSON.parse(localStorage.getItem('pacman_custom_levels')) || {};
+        levels[name] = data;
+        localStorage.setItem('pacman_custom_levels', JSON.stringify(levels));
+        alert(`Niveau "${name}" sauvegardé !`);
+    },
+
+    getLevels: () => {
+        const levels = JSON.parse(localStorage.getItem('pacman_custom_levels')) || {};
+        return Object.keys(levels);
+    },
+
+    getLevel: (name) => {
+        const levels = JSON.parse(localStorage.getItem('pacman_custom_levels')) || {};
+        return levels[name];
     }
 };
 

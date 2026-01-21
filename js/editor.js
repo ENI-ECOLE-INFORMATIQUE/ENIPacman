@@ -108,6 +108,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Export
+    document.getElementById('save-local-btn').addEventListener('click', () => {
+        const name = document.getElementById('level-name-input').value.trim();
+        if(!name) {
+            alert("Veuillez entrer un nom pour le niveau.");
+            return;
+        }
+        
+        const data = {
+            width: width,
+            height: height,
+            layout: grid
+        };
+        Storage.saveLevel(name, data);
+    });
+
     document.getElementById('export-btn').addEventListener('click', () => {
         const data = {
             width: width,

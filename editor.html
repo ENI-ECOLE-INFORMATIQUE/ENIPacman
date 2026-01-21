@@ -58,8 +58,10 @@
         
         <div id="controls">
             <button onclick="window.location.href='index.html'">RETOUR JEU</button>
-            <button id="import-btn">IMPORTER JSON</button>
-            <button id="export-btn">EXPORTER JSON</button>
+            <input type="text" id="level-name-input" placeholder="Nom du niveau" style="width: 150px;">
+            <button id="save-local-btn" style="background-color: #4CAF50; color: white;">SAUVEGARDER</button>
+            <button id="import-btn">IMPORTER</button>
+            <button id="export-btn">EXPORTER</button>
             <input type="file" id="file-input" style="display:none" accept=".json">
         </div>
 
@@ -79,6 +81,7 @@
 
     <!-- Reusing some game scripts for constants/rendering logic if useful, 
          but implementing editor specific logic in its own file -->
+    <script src="js/storage.js"></script>
     <script src="js/editor.js"></script>
 </body>
 </html>
