@@ -12,8 +12,10 @@ class Game {
 
     async start(levelSource) {
         try {
+            this.currentLevelName = "Défaut"; // Default name
             if (levelSource.startsWith('local:')) {
                 const name = levelSource.replace('local:', '');
+                this.currentLevelName = name;
                 this.levelData = Storage.getLevel(name);
                 if (!this.levelData) throw new Error("Level not found in storage");
             } else {
@@ -178,7 +180,7 @@ class Game {
         document.getElementById('game-over-title').innerText = "VICTOIRE !";
         document.getElementById('game-over-title').style.color = "#00FF00";
         document.getElementById('final-score').innerText = this.score;
-        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player");
+        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player", this.currentLevelName);
     }
 
     gameOver() {
@@ -188,7 +190,7 @@ class Game {
         document.getElementById('game-over-title').innerText = "GAME OVER";
         document.getElementById('game-over-title').style.color = "red";
         document.getElementById('final-score').innerText = this.score;
-        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player");
+        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player", this.currentLevelName);
     }
 
     draw() {
