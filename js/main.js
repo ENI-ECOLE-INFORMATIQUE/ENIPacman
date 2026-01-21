@@ -47,6 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
        });
     }
 
+    const homeBtn = document.getElementById('home-btn');
+    if(homeBtn) {
+        homeBtn.addEventListener('click', () => {
+            if(confirm("Retourner au menu principal ? La partie sera perdue.")) {
+                window.location.reload();
+            }
+        });
+    }
+
     startBtn.addEventListener('click', () => {
         const playerName = document.getElementById('player-name').value || "Player";
         // Hide menu
