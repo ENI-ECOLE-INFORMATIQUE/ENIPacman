@@ -18,57 +18,60 @@
     <div id="game-container">
       <h1>PACMAN JS</h1>
 
-      <div id="ui-layer">
-        <div id="score-board">
-          <span>SCORE: <span id="current-score">0</span></span>
-          <span>HIGH SCORE: <span id="high-score">0</span></span>
-        </div>
-
-        <div id="menu-overlay">
-          <h2>MAIN MENU</h2>
-          <input
-            type="text"
-            id="player-name"
-            placeholder="Entrez votre nom"
-            maxlength="10"
-          />
-
-          <div class="difficulty-selector">
-            <label>Difficulté:</label>
-            <select id="difficulty-select">
-              <option value="easy">Facile</option>
-              <option value="medium" selected>Moyen</option>
-              <option value="hard">Difficile</option>
-            </select>
-          </div>
-
-          <button id="start-btn">DÉMARRER</button>
-          <button
-            id="editor-btn"
-            onclick="window.location.href = 'editor.html'"
-          >
-            ÉDITEUR DE NIVEAU
-          </button>
-          <button id="leaderboard-btn">CLASSEMENT</button>
-        </div>
-
-        <div id="leaderboard-overlay" class="hidden">
-            <h2>CLASSEMENT</h2>
-            <ul id="high-score-list" style="list-style: none; padding: 0; text-align: left;">
-                <!-- Scores populated by JS -->
-            </ul>
-            <button id="close-leaderboard-btn">FERMER</button>
-        </div>
-
-        <div id="game-over-overlay" class="hidden">
-          <h2 id="game-over-title">GAME OVER</h2>
-          <p>Score Final: <span id="final-score">0</span></p>
-          <button id="restart-btn">REJOUER</button>
-          <button id="menu-btn">MENU</button>
-        </div>
+      <div id="score-board">
+        <span>SCORE: <span id="current-score">0</span></span>
+        <span>HIGH SCORE: <span id="high-score">0</span></span>
       </div>
 
-      <canvas id="game-canvas" width="448" height="496"></canvas>
+      <div id="game-wrapper" style="position: relative; display: inline-block;">
+          <div id="ui-layer">
+    
+            <div id="menu-overlay">
+              <h2>MAIN MENU</h2>
+              <input
+                type="text"
+                id="player-name"
+                placeholder="Entrez votre nom"
+                maxlength="10"
+              />
+    
+              <div class="difficulty-selector">
+                <label>Difficulté:</label>
+                <select id="difficulty-select">
+                  <option value="easy">Facile</option>
+                  <option value="medium" selected>Moyen</option>
+                  <option value="hard">Difficile</option>
+                </select>
+              </div>
+    
+              <button id="start-btn">DÉMARRER</button>
+              <button
+                id="editor-btn"
+                onclick="window.location.href = 'editor.html'"
+              >
+                ÉDITEUR DE NIVEAU
+              </button>
+              <button id="leaderboard-btn">CLASSEMENT</button>
+            </div>
+    
+            <div id="leaderboard-overlay" class="hidden">
+                <h2>CLASSEMENT</h2>
+                <ul id="high-score-list" style="list-style: none; padding: 0; text-align: left;">
+                    <!-- Scores populated by JS -->
+                </ul>
+                <button id="close-leaderboard-btn">FERMER</button>
+            </div>
+    
+            <div id="game-over-overlay" class="hidden">
+              <h2 id="game-over-title">GAME OVER</h2>
+              <p>Score Final: <span id="final-score">0</span></p>
+              <button id="restart-btn">REJOUER</button>
+              <button id="menu-btn">MENU</button>
+            </div>
+          </div>
+    
+          <canvas id="game-canvas" width="448" height="496"></canvas>
+      </div>
     </div>
 
     <!-- Scripts -->
