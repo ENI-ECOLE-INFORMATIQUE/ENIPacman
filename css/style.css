@@ -56,7 +56,8 @@ canvas {
 }
 
 #menu-overlay,
-#game-over-overlay {
+#game-over-overlay,
+#leaderboard-overlay {
   position: absolute;
   top: 50%;
   left: 50%;
