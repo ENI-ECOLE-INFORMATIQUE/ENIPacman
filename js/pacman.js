@@ -127,9 +127,11 @@ class Pacman {
         if (cell === 0) { // Dot
             this.game.board.grid[gridY][gridX] = 3; // Eat it
             this.game.score += 10;
+            this.game.board.dotsLeft--;
         } else if (cell === 2) { // Power pellet
             this.game.board.grid[gridY][gridX] = 3;
             this.game.score += 50;
+            this.game.board.dotsLeft--;
             // TODO: Frighten ghosts
         }
     }

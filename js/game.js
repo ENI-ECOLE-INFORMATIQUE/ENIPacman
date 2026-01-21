@@ -161,15 +161,26 @@ class Game {
         
         // Win condition?
         if (this.board.dotsLeft === 0) {
-            // Victory (just restart for now or next level)
-            alert("Level Complete!");
-            this.isRunning = false;
+            this.victory();
         }
+    }
+
+    victory() {
+        this.isRunning = false;
+        const overlay = document.getElementById('game-over-overlay');
+        overlay.classList.remove('hidden');
+        document.getElementById('game-over-title').innerText = "VICTOIRE !";
+        document.getElementById('game-over-title').style.color = "#00FF00";
+        document.getElementById('final-score').innerText = this.score;
+        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player");
     }
 
     gameOver() {
         this.isRunning = false;
-        document.getElementById('game-over-overlay').classList.remove('hidden');
+        const overlay = document.getElementById('game-over-overlay');
+        overlay.classList.remove('hidden');
+        document.getElementById('game-over-title').innerText = "GAME OVER";
+        document.getElementById('game-over-title').style.color = "red";
         document.getElementById('final-score').innerText = this.score;
         Storage.saveScore(this.score, document.getElementById('player-name').value || "Player");
     }
