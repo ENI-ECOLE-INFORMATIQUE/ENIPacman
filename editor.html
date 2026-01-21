@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacman Level Editor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        #editor-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        #palette {
+            display: flex;
+            gap: 10px;
+            background: #222;
+            padding: 10px;
+            border: 2px solid white;
+        }
+        .tool {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #aaa;
+            font-size: 10px;
+        }
+        .tool.selected {
+            border-color: yellow;
+        }
+        /* Visual representation of tools */
+        .tool[data-type="1"] { background: #191970; } /* Wall */
+        .tool[data-type="0"] { background: black; position: relative; } /* Dot */
+        .tool[data-type="0"]::after { content:''; width:4px; height:4px; background:#FFB8AE; position:absolute; }
+        .tool[data-type="2"] { background: black; position: relative; } /* Power */
+        .tool[data-type="2"]::after { content:''; width:10px; height:10px; background:#FFB8AE; border-radius:50%; position:absolute; }
+        .tool[data-type="3"] { background: black; border: 1px dashed #444; } /* Empty */
+        .tool[data-type="4"] { background: red; } /* Ghost Spawn */
+        .tool[data-type="5"] { background: yellow; } /* Pacman Spawn */
+
+        textarea {
+            width: 448px;
+            height: 100px;
+            background: #222;
+            color: white;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div id="editor-container">
+        <h1>LEVEL EDITOR</h1>
+        
+        <div id="controls">
+            <button onclick="window.location.href='index.html'">RETOUR JEU</button>
+            <button id="import-btn">IMPORTER JSON</button>
+            <button id="export-btn">EXPORTER JSON</button>
+            <input type="file" id="file-input" style="display:none" accept=".json">
+        </div>
+
+        <div id="palette">
+            <div class="tool selected" data-type="1" title="Mur"></div>
+            <div class="tool" data-type="0" title="Pac-Gomme"></div>
+            <div class="tool" data-type="2" title="Super Pac-Gomme"></div>
+            <div class="tool" data-type="3" title="Vide"></div>
+            <div class="tool" data-type="4" title="Spawn Fantôme">F</div>
+            <div class="tool" data-type="5" title="Spawn Pacman">P</div>
+        </div>
+
+        <canvas id="editor-canvas" width="448" height="496"></canvas>
+
+        <textarea id="json-output" readonly placeholder="Le JSON apparaîtra ici..."></textarea>
+    </div>
+
+    <!-- Reusing some game scripts for constants/rendering logic if useful, 
+         but implementing editor specific logic in its own file -->
+    <script src="js/editor.js"></script>
+</body>
+</html>

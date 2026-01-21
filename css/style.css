@@ -1,0 +1,109 @@
+:root {
+  --bg-color: #111;
+  --text-color: #fff;
+  --pacman-yellow: #ffff00;
+  --wall-color: #191970; /* MidnightBlue */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family:
+    "Press Start 2P", "Courier New", cursive, monospace; /* Fallback to monospace */
+}
+
+#game-container {
+  position: relative;
+  text-align: center;
+}
+
+h1 {
+  color: var(--pacman-yellow);
+  margin-bottom: 10px;
+  text-shadow: 2px 2px #000;
+}
+
+canvas {
+  border: 4px solid var(--wall-color);
+  background-color: #000;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(25, 25, 112, 0.5);
+}
+
+#ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through to canvas usually, but overlays will re-enable */
+}
+
+#score-board {
+  display: flex;
+  justify-content: space-between;
+  width: 448px; /* Match canvas width */
+  margin: 0 auto 10px auto;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#menu-overlay,
+#game-over-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 40px;
+  border: 2px solid var(--pacman-yellow);
+  text-align: center;
+  pointer-events: auto; /* Re-enable clicks */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 300px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+button {
+  background: var(--pacman-yellow);
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #fff;
+}
+
+input,
+select {
+  padding: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.difficulty-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
