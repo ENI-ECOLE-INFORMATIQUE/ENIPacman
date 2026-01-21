@@ -1,15 +1,15 @@
 const Storage = {
-    saveScore: (score, name, levelName) => {
+    saveScore: (score, name, levelName, difficulty) => {
         // Global Scores (simulated as shared local storage for this demo)
         let globalScores = JSON.parse(localStorage.getItem('pacman_global_scores')) || [];
-        globalScores.push({ name, score, level: levelName, date: new Date().toISOString() });
+        globalScores.push({ name, score, level: levelName, difficulty: difficulty, date: new Date().toISOString() });
         globalScores.sort((a, b) => b.score - a.score);
         globalScores = globalScores.slice(0, 10);
         localStorage.setItem('pacman_global_scores', JSON.stringify(globalScores));
 
         // Personal Scores
         let personalScores = JSON.parse(localStorage.getItem(`pacman_scores_${name}`)) || [];
-        personalScores.push({ score, level: levelName, date: new Date().toISOString() });
+        personalScores.push({ score, level: levelName, difficulty: difficulty, date: new Date().toISOString() });
         personalScores.sort((a, b) => b.score - a.score);
         personalScores = personalScores.slice(0, 10);
         localStorage.setItem(`pacman_scores_${name}`, JSON.stringify(personalScores));

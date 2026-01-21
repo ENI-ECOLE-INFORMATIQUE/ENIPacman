@@ -180,7 +180,7 @@ class Game {
         document.getElementById('game-over-title').innerText = "VICTOIRE !";
         document.getElementById('game-over-title').style.color = "#00FF00";
         document.getElementById('final-score').innerText = this.score;
-        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player", this.currentLevelName);
+        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player", this.currentLevelName, this.difficultyLevel);
     }
 
     gameOver() {
@@ -190,7 +190,7 @@ class Game {
         document.getElementById('game-over-title').innerText = "GAME OVER";
         document.getElementById('game-over-title').style.color = "red";
         document.getElementById('final-score').innerText = this.score;
-        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player", this.currentLevelName);
+        Storage.saveScore(this.score, document.getElementById('player-name').value || "Player", this.currentLevelName, this.difficultyLevel);
     }
 
     draw() {

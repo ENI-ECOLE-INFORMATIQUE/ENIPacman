@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             scores.forEach((s, index) => {
                 const li = document.createElement('li');
-                li.innerText = `${index + 1}. ${s.name} - ${s.score} (${s.level || "Inconnu"})`;
+                li.innerText = `${index + 1}. ${s.name} - ${s.score} (${s.level || "Inconnu"} - ${s.difficulty || "Moyen"})`;
                 highScoreList.appendChild(li);
             });
         }
