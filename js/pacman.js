@@ -25,53 +25,97 @@ class Pacman {
         this.mouthOpen += this.mouthSpeed;
         if (this.mouthOpen > 1 || this.mouthOpen < 0) this.mouthSpeed = -this.mouthSpeed;
 
-        // Try to turn
+        // 1. Handle Immediate Reversal (Classic Pacman behavior)
         if (this.nextDir.x !== 0 || this.nextDir.y !== 0) {
-            if (this.canMove(this.nextDir)) {
+            // Case A: Reversing
+            if (this.nextDir.x === -this.dir.x && this.nextDir.y === -this.dir.y) {
                 this.dir = this.nextDir;
                 this.nextDir = { x: 0, y: 0 };
             }
+            // Case B: Starting from Stop
+            else if (this.dir.x === 0 && this.dir.y === 0) {
+                 if (!this.isWallBlocking(this.nextDir)) {
+                    this.dir = this.nextDir;
+                    this.nextDir = { x: 0, y: 0 };
+                }
+            }
         }
 
-        // Try to move
-        if (this.canMove(this.dir)) {
-            this.x += this.dir.x * this.speed;
-            this.y += this.dir.y * this.speed;
+        // 2. Calculate Center of nearest tile
+        let center = {
+            x: Math.round(this.x / 16) * 16,
+            y: Math.round(this.y / 16) * 16
+        };
+
+        // 3. Check if we are at center OR will cross it this frame
+        // (We use >= and <= to handle exact landing too)
+        let distSincePixel = Math.abs(this.x - center.x) + Math.abs(this.y - center.y);
+        // If we are moving towards center and distance is less than speed, we cross it.
+        // Or if we are exactly there (dist=0)
+        
+        // Simplified: Are we aligned enough to make a decision?
+        // If we simply execute movement, where do we end up?
+        let nextPos = {
+            x: this.x + this.dir.x * this.speed,
+            y: this.y + this.dir.y * this.speed
+        };
+
+        // Detection: Did we cross 'center' between (this.x,this.y) and nextPos?
+        // Check X axis crossing
+        let crossedX = (this.dir.x > 0 && this.x <= center.x && nextPos.x >= center.x) ||
+                       (this.dir.x < 0 && this.x >= center.x && nextPos.x <= center.x);
+        // Check Y axis crossing
+        let crossedY = (this.dir.y > 0 && this.y <= center.y && nextPos.y >= center.y) ||
+                       (this.dir.y < 0 && this.y >= center.y && nextPos.y <= center.y);
+
+        if (crossedX || crossedY) {
+            // WE HIT A TILE CENTER!
+            // Snap position exactly to center to run logic
+            this.x = center.x;
+            this.y = center.y;
+
+            // Decision Time
+            // a. Try to Turn
+            if (this.nextDir.x !== 0 || this.nextDir.y !== 0) {
+                if (!this.isWallBlocking(this.nextDir)) {
+                    this.dir = this.nextDir;
+                    this.nextDir = { x: 0, y: 0 };
+                }
+            }
             
-            // Handle wrapping (tunnel)
-            if (this.x < -8) this.x = this.game.canvas.width;
-            if (this.x > this.game.canvas.width) this.x = -8;
-        } else {
-            // Snap to grid if stuck
-           // this.alignToGrid();
+            // b. Check if blocked ahead
+            if (this.isWallBlocking(this.dir)) {
+                // Stop here
+                this.checkCollisions(); // Check dot at this center
+                return; 
+            }
         }
+
+        // Apply Movement
+        this.x += this.dir.x * this.speed;
+        this.y += this.dir.y * this.speed;
+
+        // Tunnel Wrapping
+        if (this.x < -8) this.x = this.game.canvas.width;
+        if (this.x > this.game.canvas.width) this.x = -8;
 
         this.checkCollisions();
     }
 
-    // Check if we can move in a direction from current position
-    canMove(direction) {
-        // We only check if aligned to grid for turning
-        const tolerance = 4; // allow sloppy turning
-        const isAlignedX = (this.x % 16) < tolerance || (this.x % 16) > 16 - tolerance;
-        const isAlignedY = (this.y % 16) < tolerance || (this.y % 16) > 16 - tolerance;
-
-        if (!isAlignedX && direction.x === 0) return false; // Can't turn Y if not aligned X
-        if (!isAlignedY && direction.y === 0) return false; // Can't turn X if not aligned Y
-
-        // Basic wall check of the target tile
-        // Calculate center point + lookahead
+    // Helper: is there a wall in this direction from CURRENT ALIGNED position?
+    isWallBlocking(direction) {
         let nextX = this.x + direction.x * 16;
         let nextY = this.y + direction.y * 16;
         
-        // Convert to grid
         let gridX = Math.floor((nextX + 8) / 16);
         let gridY = Math.floor((nextY + 8) / 16);
 
-        if (this.game.board.isWall(gridX, gridY)) return false;
-        
-        return true;
+        return this.game.board.isWall(gridX, gridY);
     }
+    
+    // Legacy support or strict check helper
+    // Not used in new update loop but kept if needed
+    canMove(direction) { return !this.isWallBlocking(direction); }
 
     checkCollisions() {
         // Center of pacman

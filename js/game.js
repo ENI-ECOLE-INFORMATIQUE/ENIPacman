@@ -13,72 +13,86 @@ class Game {
     async start(levelUrl) {
         try {
             const response = await fetch(levelUrl);
-            const levelData = await response.json();
+            this.levelData = await response.json();
             
             // Resize canvas to fit level
-            this.canvas.width = levelData.width * 16;
-            this.canvas.height = levelData.height * 16;
+            this.canvas.width = this.levelData.width * 16;
+            this.canvas.height = this.levelData.height * 16;
             
-            this.board.load(levelData);
+            this.initGame();
 
-            // Find spawn point
-            let spawnX = 1, spawnY = 1;
-            this.ghosts = [];
-            const ghostColors = ['#FF0000', '#FFB8FF', '#00FFFF', '#FFB852']; // Blinky, Pinky, Inky, Clyde
-            let ghostIndex = 0;
-
-            for(let y=0; y<this.board.height; y++) {
-                for(let x=0; x<this.board.width; x++) {
-                    if (this.board.grid[y][x] === 5) {
-                        spawnX = x;
-                        spawnY = y;
-                        this.board.grid[y][x] = 3; // Clear spawn marker
-                    } else if (this.board.grid[y][x] === 4) {
-                        // Spawn ghost
-                        let color = ghostColors[ghostIndex % ghostColors.length];
-                        let ghost = new Ghost(this, x, y, color);
-                        // Assign scatter corners based on index
-                        switch(ghostIndex % 4) {
-                            case 0: ghost.scatterTarget = {x: this.canvas.width, y: 0}; break; // Top Right
-                            case 1: ghost.scatterTarget = {x: 0, y: 0}; break; // Top Left
-                            case 2: ghost.scatterTarget = {x: this.canvas.width, y: this.canvas.height}; break; // Bottom Right
-                            case 3: ghost.scatterTarget = {x: 0, y: this.canvas.height}; break; // Bottom Left
-                        }
-                        this.ghosts.push(ghost);
-                        this.board.grid[y][x] = 0; // Or 3? usually ghost house is empty. Let's say 3.
-                        // Actually standard maps have dots there sometimes. Defaulting to 3 (empty) for simplicity.
-                        this.board.grid[y][x] = 3;
-                        ghostIndex++;
-                    }
-                }
-            }
-
-            this.pacman = new Pacman(this, spawnX, spawnY);
-            
             // Input listeners
             window.addEventListener('keydown', (e) => {
                 if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
                     e.preventDefault();
-                    this.pacman.handleInput(e.code);
+                    if(this.pacman) this.pacman.handleInput(e.code);
+                }
+                if(e.code === "Space") {
+                    e.preventDefault();
+                    this.restart();
                 }
             });
 
             this.isRunning = true;
             this.score = 0;
-            
-            // Difficulty Settings
-            this.difficultyLevel = document.getElementById('difficulty-select').value;
-            this.setupDifficulty();
-            
-            this.modeTimer = 0;
-            this.globalMode = 'SCATTER'; // Global ghost mode
-
             requestAnimationFrame(this.loop);
             
             console.log("Game Started");
         } catch (error) {
             console.error("Failed to load level:", error);
         }
+    }
+
+    restart() {
+        this.score = 0;
+        this.initGame();
+        this.isRunning = true;
+        this.lastTime = performance.now();
+        document.getElementById('game-over-overlay').classList.add('hidden');
+        requestAnimationFrame(this.loop);
+    }
+
+    initGame() {
+        this.board.load(this.levelData);
+        
+        // Find spawn point
+        let spawnX = 1, spawnY = 1;
+        this.ghosts = [];
+        const ghostColors = ['#FF0000', '#FFB8FF', '#00FFFF', '#FFB852']; // Blinky, Pinky, Inky, Clyde
+        let ghostIndex = 0;
+
+        for(let y=0; y<this.board.height; y++) {
+            for(let x=0; x<this.board.width; x++) {
+                if (this.board.grid[y][x] === 5) {
+                    spawnX = x;
+                    spawnY = y;
+                    this.board.grid[y][x] = 3; // Clear spawn marker
+                } else if (this.board.grid[y][x] === 4) {
+                    // Spawn ghost
+                    let color = ghostColors[ghostIndex % ghostColors.length];
+                    let ghost = new Ghost(this, x, y, color);
+                    // Assign scatter corners based on index
+                    switch(ghostIndex % 4) {
+                        case 0: ghost.scatterTarget = {x: this.canvas.width, y: 0}; break; // Top Right
+                        case 1: ghost.scatterTarget = {x: 0, y: 0}; break; // Top Left
+                        case 2: ghost.scatterTarget = {x: this.canvas.width, y: this.canvas.height}; break; // Bottom Right
+                        case 3: ghost.scatterTarget = {x: 0, y: this.canvas.height}; break; // Bottom Left
+                    }
+                    this.ghosts.push(ghost);
+                    this.board.grid[y][x] = 3;
+                    ghostIndex++;
+                }
+            }
+        }
+
+        this.pacman = new Pacman(this, spawnX, spawnY);
+        
+        // Difficulty Settings
+        this.difficultyLevel = document.getElementById('difficulty-select').value;
+        this.setupDifficulty();
+
+        this.globalMode = 'SCATTER';
+        this.modeTimer = 0;
     }
 
     setupDifficulty() {
